@@ -1,1 +1,1 @@
-# matjematic
+# mathematic
