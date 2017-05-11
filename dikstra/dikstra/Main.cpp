@@ -4,15 +4,20 @@
 #include<algorithm>
 #include<cstdlib>
 #include<ctime>
+#include<Windows.h>
 
 using namespace std;
 
 int main() {
 
 	srand(time(NULL));
-	int n = 10;
+	int n = 1000;
 	int start = 2;
 	int end = n - 1;
+
+	time_t str, koniec;
+	long double ms;
+	unsigned __int64 freq, counterStart, counterStop;
 	vector<vector<int>> graph(n, vector<int>(n));
 	
 
@@ -32,11 +37,11 @@ int main() {
 			graph[j][i] = graph[i][j];
 	}
 	//wypisanie graphu
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++)
-			cout << graph[i][j]<<" ";
-		cout << endl;
-	}
+	//for (int i = 0; i < n; i++) {
+	//	for (int j = 0; j < n; j++)
+	//		cout << graph[i][j]<<" ";
+	//	cout << endl;
+	//}
 
 	vector<vector<int>> pass(n, vector<int>(n));
 
@@ -78,6 +83,9 @@ int main() {
 	int compare = 101; //bedzie sluzyc do porownania wartosci w tablicy peak
 	int trackingid = n + 1; //bedzie sluzyc do zapisania w tablicy peak ostatniego odwiedzonego wierzcholka
 
+	QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*> (&freq));
+	QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*> (&counterStart));
+	
 	//step 1 : znalezienie najmniejszej wartosci w tablicy peak
 while(!notvisited.empty()){
 	for (int i = 0; i<n; i++) {
@@ -105,10 +113,12 @@ while(!notvisited.empty()){
 	}
 	compare = 101;
 }
+QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*> (&counterStop));
+
 
 
 	//-----wyswitlenia----
-	cout << "lista " << endl;
+	/*cout << "lista " << endl;
 	for (list<int>::iterator i = notvisited.begin(); i != notvisited.end(); ++i)
 		cout << *i;
 	cout << endl;
@@ -134,23 +144,25 @@ while(!notvisited.empty()){
 	}
 
 	//backtracking
-
-	for (int i = 0; i < n; i++)
-	{
-		trackingid = i;
+	*/
+	//for (int i = 0; i < n; i++)
+	//{
+trackingid = n - 1;//i;
 
 		while (trackingid != -1) {
 			notvisited.push_front(trackingid);
 			trackingid = peak[1][trackingid];
 		}
 	
-		cout << "koszty przejscia sciezki " << i << ": " << endl;
+		cout << "koszty przejscia sciezki " << n-1 << ": " << endl;
 
 		for (list<int>::iterator i = notvisited.begin(); i != notvisited.end(); ++i)
 			cout << *i << "->";
-		cout << "koszt przejscia :"<<peak[0][i]<<endl;
+		cout << "koszt przejscia :"<<peak[0][n-1]<<endl;
 		notvisited.clear();
-	}
+	//}
+		ms = (static_cast<long double> (counterStop) - counterStart) / freq * 1000;
+	cout << endl << endl << ms<<endl;
 
 
 	system("pause");
